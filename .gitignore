@@ -9,6 +9,8 @@ application.yml
 
 ### Runtime Cache ###
 app_cache/
+cache/
+device.json
 
 ### STS ###
 .apt_generated
