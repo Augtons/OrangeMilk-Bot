@@ -1,5 +1,8 @@
 # OrangeMilk-Bot
 
+![](https://shields.io/github/languages/top/Augtons/OrangeMilk-Bot)
+![](https://shields.io/github/license/Augtons/OrangeMilk-Bot)
+
 基于`mirai`实现，运行在`JVM`平台的机器人`Orange-Milk`。[mirai仓库地址](https://github.com/mamoe/mirai)
 
 > mirai 是一个在全平台下运行，提供 QQ 多种设备协议支持的高效率机器人库
