@@ -20,7 +20,8 @@ class BotCommandSwitch {
     var mcCommandMap: MutableMap<KClass<out MessageEvent>, MutableList<McCommandSetEntity>> = mutableMapOf()
 
     data class McCommandSetEntity(
-        val command: McCommand<MessageEvent>,
+        val command: McCommand<MessageEvent>, // 思考题：为什么这里不写McCommand<out MessageEvent>
+                                              // 答案：McCommand<>的type字段的声明：val type: List<KClass<out E>>，已包含out的语义
         val disabledIDs: MutableSet<Long> // 禁止的ID，若命令为群命令，则此为已经关闭的群，否则为已经开启的群
     )
 
