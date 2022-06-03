@@ -65,7 +65,7 @@ class SingMusic(
 
             context!!.subject.sendMessage("正在为您搜索酷狗歌曲")
             try {
-                kugouMusicSearcher.search(keyWord)?.let { music ->
+                kugouMusicSearcher.searchSuspend(keyWord)!!.let { music ->
                     context!!.subject.sendMessage(
                         MusicShare(
                             MusicKind.KugouMusic, music.musicName, music.singerName, music.playURL,
@@ -74,7 +74,7 @@ class SingMusic(
                     )
                 }
             }catch (_: Exception) {
-                context!!.subject.sendMessage("酷狗点歌：\n未找到“$keyWord”\n换一个搜索词或改用其他平台搜索吧")
+                context!!.subject.sendMessage("【酷狗】\n未找到“$keyWord”\n换一个搜索词或改用其他平台搜索吧")
             }
         }
     }
@@ -100,7 +100,7 @@ class SingMusic(
             context!!.subject.sendMessage("正在为您搜索网易云歌曲")
 
             try {
-                netEaseMusicSearcher.searchSuspend(keyWord)?.let { music ->
+                netEaseMusicSearcher.searchSuspend(keyWord)!!.let { music ->
                     context!!.subject.sendMessage(
                         MusicShare(
                             MusicKind.NeteaseCloudMusic, music.musicName, music.singerName, music.playURL,
@@ -109,7 +109,7 @@ class SingMusic(
                     )
                 }
             }catch (_e: Exception) {
-                context!!.subject.sendMessage("网易云点歌：\n未找到“$keyWord”\n换一个搜索词或改用其他平台搜索吧")
+                context!!.subject.sendMessage("【网易云】\n未找到“$keyWord”\n换一个搜索词或改用其他平台搜索吧")
             }
         }
     }

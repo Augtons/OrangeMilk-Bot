@@ -4,7 +4,9 @@ import com.github.augtons.orangemilk.configurations.properties.MusicProperties
 import com.github.augtons.orangemilk.utils.httpGetString
 import com.github.augtons.orangemilk.utils.logger
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
 import java.net.URLEncoder
 import javax.annotation.PostConstruct
@@ -43,7 +45,11 @@ class KugouMusicSearcher(
     /**
      * 搜索获取全部结果的第一首歌
      */
-    override fun search(keyword: String): MusicResult? {
+    override fun search(keyword: String): MusicResult? = runBlocking {
+        searchSuspend(keyword)
+    }
+
+    suspend fun searchSuspend(keyword: String): MusicResult? {
         try {
             val sings = getMusicLists(keyword)
             for (sing in sings) {
@@ -80,16 +86,17 @@ class KugouMusicSearcher(
     /**
      * 搜索所有音乐，返回包含搜索结果的列表(包含音乐Hash和专辑Hash)
      */
-    fun getMusicLists(keyword: String): MutableList<KugouSearchResualt.Data.Song> {
+    suspend fun getMusicLists(keyword: String): MutableList<KugouSearchResualt.Data.Song> {
         val md5 = getMd5(keyword)
         val url = "https://complexsearch.kugou.com/v2/search/song?callback=callback123&keyword=${
-            URLEncoder.encode(keyword, "UTF-8")
+            withContext(Dispatchers.IO) {
+                URLEncoder.encode(keyword, "UTF-8")
+            }
         }" + "&page=1&pagesize=30&bitrate=0&isfuzzy=0&tag=&inputtype=0&platform=WebFilter&userid=0&clientver=2000&iscorrection=1" +
              "&privilege_filter=0&token=&srcappid=2919&clienttime=1645335325735&mid=1645335325735&uuid=1645335325735&dfid=-" +
              "&signature=" + md5
 
-        val searchResultRaw = runBlocking { httpGetString(url) }
-            .run { substring(12, length - 2) }
+        val searchResultRaw = httpGetString(url).run { substring(12, length - 2) }
 
         val kugouSearchResualt = Gson().fromJson(searchResultRaw, KugouSearchResualt::class.java)
         return kugouSearchResualt.data.lists
@@ -98,9 +105,9 @@ class KugouMusicSearcher(
     /**
      * 通过音乐Hash和专辑Hash，获取音乐的url + 封面url等信息
      */
-    fun getMusic(sing: KugouSearchResualt.Data.Song): MusicResult {
+    suspend fun getMusic(sing: KugouSearchResualt.Data.Song): MusicResult {
         val url = "https://wwwapi.kugou.com/yy/index.php?r=play/getdata&hash=${sing.FileHash}&mid=s&album_id=${sing.AlbumID}"// + resualt.data.lists[0].FileHash
-        val musicResultRaw = runBlocking { httpGetString(url) }
+        val musicResultRaw = httpGetString(url)
         val kugouSing = Gson().fromJson(musicResultRaw, KugouSing::class.java)
 
         with(kugouSing.data) {

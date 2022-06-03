@@ -22,13 +22,17 @@ class HelloAndHelps(
     }
 
     val helpText = """
-        |注意：指令和参数，以及指令之间要加空格
+        |★注意：空格！空格！空格！
         |
         |一、含参指令
-        |  1.酷狗点歌: /music、/kgmus、/kugou、/kgmusic、/kg、/酷狗" + 歌名
-        |  2.网易云点歌: /netease、/wyy、/wangyi、/wymusic、/网易云 + 歌名
-        |  3.天气: /weather、/tq、/天气 + 全世界地名
-        |  4.[仅群聊]丢群友: /diu、/丢 + @人 或 QQ号
+        |  1.酷狗点歌：/kugou 歌名
+        |　　　别名：/music、/kg、/kgmus、/kgmusic、/酷狗
+        |  2.网易云点歌: /wyy 歌名
+        |  　　别名：/wymusic、/netease、/wangyi、/网易云
+        |  3.天气: /weather 地名
+        |  　　别名：/tq、/天气
+        |  4.[仅群聊]丢群友: /diu @人或QQ号
+        |  　　别名：/丢
         |  
         |二、无参指令
         |  1.帮助: /help、/list

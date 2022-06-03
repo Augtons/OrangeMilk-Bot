@@ -1,9 +1,8 @@
 package com.github.augtons.orangemilk.media.music
 
 import com.github.augtons.orangemilk.configurations.properties.MusicProperties
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -25,5 +24,14 @@ internal class KugouMusicSearcherTest {
     @Test
     fun getMusicProperties() {
         assert(musicProperties.kugou.signatureGetter.isNotBlank())
+    }
+
+    @Test
+    fun getFirstMusic() {
+        runBlocking {
+            kugouMusicSearcher.searchSuspend("迈兮").let {
+                println(it)
+            }
+        }
     }
 }

@@ -1,12 +1,14 @@
 package com.github.augtons.orangemilk.listeners
 
-import com.github.augtons.orangemilk.command.*
 import com.github.augtons.orangemilk.command.mc.McCommand
 import com.github.augtons.orangemilk.command.mc.parseMcCommand
+import com.github.augtons.orangemilk.command.registerCommand
 import com.github.augtons.orangemilk.runtime.BotCommandSwitch
 import com.github.augtons.orangemilk.utils.then
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.mamoe.mirai.Bot
-import net.mamoe.mirai.event.GroupTempMessageSubscribersBuilder
 import net.mamoe.mirai.event.events.*
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -16,6 +18,8 @@ class CommandListener(
     val bot: Bot,
     val botCommandSwitch: BotCommandSwitch
 ) {
+
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     @PostConstruct
     fun init() {
@@ -43,7 +47,9 @@ class CommandListener(
                 }
 
                 commandToCall.forEach {
-                    it.onCall(it)
+                    coroutineScope.launch {
+                        it.onCall(it)
+                    }
                 }
             }
 
@@ -69,7 +75,9 @@ class CommandListener(
                 }
 
                 commandToCall.forEach {
-                    it.onCall(it)
+                    coroutineScope.launch {
+                        it.onCall(it)
+                    }
                 }
             }
 
@@ -95,7 +103,9 @@ class CommandListener(
                 }
 
                 commandToCall.forEach {
-                    it.onCall(it)
+                    coroutineScope.launch {
+                        it.onCall(it)
+                    }
                 }
             }
 
@@ -121,7 +131,9 @@ class CommandListener(
                 }
 
                 commandToCall.forEach {
-                    it.onCall(it)
+                    coroutineScope.launch {
+                        it.onCall(it)
+                    }
                 }
             }
     }
