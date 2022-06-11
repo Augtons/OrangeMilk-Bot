@@ -33,11 +33,16 @@ class NetEaseMusicSearcher(
 ) : MusicSearcher() {
 
     private val logger = logger<NetEaseMusicSearcher>()
+    // 是否可用，判断是否已指定网易云音乐API地址
+    val enabled: Boolean by lazy { musicProperties.netease.apiUrl.isNotBlank() }
 
     @PostConstruct
     fun init() {
-        if (musicProperties.netease.apiUrl.isBlank()) {
-            throw IllegalStateException("未指定网易云音乐API地址")
+        if (!enabled) {
+//            throw IllegalStateException("未指定网易云音乐API地址")
+            logger.warn("未指定网易云音乐API地址, NetEaseMusicSearcher.enabled = $enabled")
+        } else {
+            logger.info("网易云搜歌已启用, NetEaseMusicSearcher.enabled = $enabled")
         }
     }
 
@@ -54,6 +59,8 @@ class NetEaseMusicSearcher(
      * 搜索获取全部结果的第一首歌，但是该函数是挂起版本
      */
     suspend fun searchSuspend(keyword: String): MusicResult? {
+        if (!enabled) { return null }
+
         try {
             val sings = getMusicLists(keyword)
 

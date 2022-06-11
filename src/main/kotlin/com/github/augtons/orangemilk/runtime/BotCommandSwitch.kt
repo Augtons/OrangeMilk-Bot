@@ -62,12 +62,14 @@ class BotCommandSwitch {
     ) = getMcCommand(prefix, id, E::class)
 }
 
+@Deprecated("请使用getMcCommand")
 operator fun McCommandSet.get(
     prefix: String
 ): BotCommandSwitch.McCommandSetEntity? {
     return firstOrNull { prefix in it.command.prefixs }
 }
 
+@Deprecated("请使用getMcCommand")
 operator fun McCommandSet.get(
     prefix: String, groupID: Long
 ): BotCommandSwitch.McCommandSetEntity? {

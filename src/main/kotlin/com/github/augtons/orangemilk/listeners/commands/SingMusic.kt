@@ -38,16 +38,19 @@ class SingMusic(
         prefix = listOf("/sing")
 
         onCall {
-            singProvider.getSing()?.toExternalResource()?.use {
+            val (sing, appreciation) = singProvider.getSingWithAppreciate()
+            val audio = sing?.toExternalResource()?.use {
                 val context = context
                 when(context) {
                     is GroupEvent -> context.group.uploadAudio(it)
                     is FriendMessageEvent -> context.sender.uploadAudio(it)
                     else -> null
                 }
+            }
 
-            }?.let {
-                context!!.subject.sendMessage(it)
+            context!!.subject.run {
+                appreciation?.let { sendMessage(it) }
+                audio?.let { sendMessage(it) }
             }
         }
     }
@@ -56,6 +59,8 @@ class SingMusic(
     val kgMusic = mcCommand4<GroupMessageEvent, FriendMessageEvent, GroupTempMessageEvent, StrangerMessageEvent> {
         name = "kugou music"
         prefix = listOf("/music", "/kgmus", "/kugou", "/kgmusic", "/kg", "/酷狗")
+
+        filter { kugouMusicSearcher.enabled }
 
         needArgs = true
 
@@ -88,6 +93,8 @@ class SingMusic(
     ) {
         name = "netease music"
         prefix = listOf("/netease", "/wyy", "/wangyi", "/wymusic", "/网易云")
+
+        filter { netEaseMusicSearcher.enabled }
 
         needArgs = true
 

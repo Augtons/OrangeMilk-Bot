@@ -15,6 +15,7 @@ import net.mamoe.mirai.message.data.MusicShare
 import net.mamoe.mirai.message.data.content
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class TestListener(
@@ -69,9 +70,22 @@ class TestListener(
                 }
 
                 "测试唱歌" {
-                    singProvider.getSing()?.toExternalResource()?.use {
+                    var sing: File? = null
+                    var appreciation: String? = null
+
+                    for(i in 1..100) {
+                        val (s, a) = singProvider.getSingWithAppreciate()
+                        if(a != null) {
+                            sing = s!!
+                            appreciation = a
+                            break
+                        }
+                    }
+
+                    sing!!.toExternalResource().use {
                         group.uploadAudio(it)
-                    }?.let {
+                    }.let {
+                        appreciation?.let { subject.sendMessage(it) }
                         subject.sendMessage(it)
                     }
                 }

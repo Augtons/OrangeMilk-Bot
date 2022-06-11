@@ -35,10 +35,15 @@ class KugouMusicSearcher(
 
     private val logger = logger<KugouMusicSearcher>()
 
+    val enabled: Boolean by lazy { musicProperties.kugou.signatureGetter.isNotBlank() }
+
     @PostConstruct
     fun init() {
-        if (musicProperties.kugou.signatureGetter.isBlank()) {
-            throw IllegalStateException("未指定酷狗音乐signature生成脚本命令")
+        if (!enabled) {
+//            throw IllegalStateException("未指定酷狗音乐signature生成脚本命令")
+            logger.warn("未指定酷狗音乐signature生成脚本命令, KugouMusicSearcher.enabled = $enabled")
+        } else {
+            logger.info("酷狗搜歌已启用 KugouMusicSearcher.enabled = $enabled")
         }
     }
 
@@ -70,6 +75,8 @@ class KugouMusicSearcher(
      * 酷狗音乐的MD5校验
      */
     fun getMd5(keyword: String): String {
+        if (!enabled) { return "" }
+
         val signatureProcess = Runtime.getRuntime().exec(
             "${musicProperties.kugou.signatureGetter} ${keyword}"
         )
@@ -87,6 +94,8 @@ class KugouMusicSearcher(
      * 搜索所有音乐，返回包含搜索结果的列表(包含音乐Hash和专辑Hash)
      */
     suspend fun getMusicLists(keyword: String): MutableList<KugouSearchResualt.Data.Song> {
+        if (!enabled) { return mutableListOf() }
+
         val md5 = getMd5(keyword)
         val url = "https://complexsearch.kugou.com/v2/search/song?callback=callback123&keyword=${
             withContext(Dispatchers.IO) {

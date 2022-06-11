@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.augtons"
-version = "1.0.1-Release"
+version = "1.1.0-Release"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -29,6 +29,7 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("com.google.code.gson:gson:2.9.0")
+    implementation("org.ini4j:ini4j:0.5.4")
 }
 
 tasks.withType<KotlinCompile> {

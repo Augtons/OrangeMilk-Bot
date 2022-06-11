@@ -1,10 +1,17 @@
 package com.github.augtons.orangemilk.configurations.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.Configuration
 import org.springframework.stereotype.Component
 import kotlin.io.path.Path
 
+/**
+ * 媒体：sing的配置
+ * ```ymal
+ * media:
+ *   sing:
+ *     path: /path/to/sings #歌曲的目录，默认: ./sings
+ * ```
+ */
 @Component
 @ConfigurationProperties("media.sing")
 class SingProperties {
