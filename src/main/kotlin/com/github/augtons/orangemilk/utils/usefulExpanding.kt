@@ -16,7 +16,7 @@ import java.io.OutputStream
  */
 inline fun <reified T> logger(): Logger = LoggerFactory.getLogger(T::class.java)
 
-inline fun <T> Boolean.then(block: () -> T) = if (this) block() else null
+inline fun <T> Boolean.then(block: () -> T?) = if (this) block() else null
 
 fun <A, B> Pair<A, B>?.orNull() = this ?: (null to null)
 
@@ -44,7 +44,7 @@ inline fun <reified T> String.fromJSONString() = Gson().fromJson(this, T::class.
  * 获取当前的系统启动时间(毫秒)，等价于[System.currentTimeMillis()]
  * @author augtons
  */
-fun nowMillis() = System.currentTimeMillis()
+inline fun nowMillis() = System.currentTimeMillis()
 
 /**
  * 检查文件后缀名

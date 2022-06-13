@@ -214,6 +214,8 @@ class McCommandBuilder<E : MessageEvent> {
     }
 
     fun build(): McCommand<E> {
+        onCall ?: error("未实现指令(未添加onCall字段)")
+
         return McCommand(
             type, name, prefix, emptyList(), filters, help, needArgs, null, onCall!!
         )
