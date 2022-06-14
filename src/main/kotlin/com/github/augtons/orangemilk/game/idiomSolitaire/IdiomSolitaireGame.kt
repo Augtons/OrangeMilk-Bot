@@ -12,6 +12,7 @@ import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.buildMessageChain
+import java.util.LinkedList
 import kotlin.math.min
 
 class IdiomSolitaireGame(
@@ -38,6 +39,8 @@ class IdiomSolitaireGame(
 
     private var lastIdiom: String = ""
     private var lastPinyin: String = ""
+
+    private val recentIdioms: LinkedList<String> = LinkedList()
 
     private var maxRound = 30   // 最大回合数，默认30
     private var round = 1       // 当前回合数
@@ -67,7 +70,7 @@ class IdiomSolitaireGame(
             maxRound = if(it <= 0) 30 else min(200, it)
         }
         // 初始化第一个成语
-        val (idiom, lastpy) = idiomUtil.randomIdiom()
+        val (idiom, lastpy) = idiomUtil.randomIdiomHasNext()
         lastIdiom = idiom
         lastPinyin = lastpy
 
@@ -125,6 +128,30 @@ class IdiomSolitaireGame(
                         )
                         finish()
                     }
+                    // 判断玩家说的这个成语是不是可以接，如果不能接，换一个
+                    if (idiomUtil.pinyinHasNext(lastPinyin).not()) {
+                        subject.sendMessage(
+                            buildString {
+                                append("“${lastIdiom}($lastPinyin)”这个成语好像接不了哎，我来给你们换一个吧\n\n")
+                                val (newIdiom, newLastpy) = idiomUtil.randomIdiomHasNext()
+                                lastIdiom = newIdiom
+                                lastPinyin = newLastpy
+                                append("新成语：${lastIdiom}($lastPinyin)")
+                            }
+                        )
+                    }
+                    // 判断是否已经发生了循环刷分（连续3个答对的成语都是同一个）
+                    if (updateRecentIdioms(lastIdiom)) { // 套娃了
+                        subject.sendMessage(
+                            buildString {
+                                append("你们怎么开始套娃了，我来给你们换一个吧\n\n")
+                                lastIdiom = idiomUtil.randomNextHasNextAndExcept(lastIdiom)!!
+                                lastPinyin = idiomUtil.getLastWordPinyin(lastIdiom)!!
+                                append("新成语：${lastIdiom}($lastPinyin)")
+                            }
+                        )
+                        updateRecentIdioms(lastIdiom)
+                    }
                 } else { // 有人说了个成语，但是不能接上
                     subject.sendMessage(
                         At(sender) + "\n" + """
@@ -157,14 +184,15 @@ class IdiomSolitaireGame(
                                     +"你不是刚提示了嘛"
                                     +Face(Face.撇嘴)
                                     +At(sender)
-                                    +"\n距离你下一次发动提示技能还剩${(hindCD-(nowMillis()-time))/1000}秒"
+                                    +"\n你再过${(hindCD-(nowMillis()-time))/1000}秒才能提示哦~"
                                 }
                             )
                             return@subscribeAlways
                         }
                         // 第二步：若上文没有返回，则发动提示
                         timer.time = timeAfterHind // 时间重启
-                        lastIdiom = idiomUtil.randomNext(lastIdiom)!!
+                        // 机器人接一个成语，并且获取一个能接的
+                        lastIdiom = idiomUtil.randomNextHasNext(lastIdiom)!!
                         lastPinyin = idiomUtil.getLastWordPinyin(lastIdiom)!!
 
                         playerHintRequestTimes[sender.id] = nowMillis()
@@ -190,6 +218,23 @@ class IdiomSolitaireGame(
                 }
             }
         }
+    }
+
+    /**
+     * 更新最近成语
+     * @return true 当最近几次(典型值：3次)成语均相同时，认定为套娃发生
+     *
+     * false 同上，均不同。认定为套娃未发生
+     */
+    private fun updateRecentIdioms(idiom: String): Boolean {
+        recentIdioms.addLast(idiom)
+        if (recentIdioms.size > 3) {
+            recentIdioms.removeFirst()
+        }
+        return if(recentIdioms.size >= 3) {
+            //通过set去重之后长度为1，因此认为最近三次均为同一个成语，即套娃
+            recentIdioms.toSet().size == 1
+        } else false
     }
 
     class Timer(

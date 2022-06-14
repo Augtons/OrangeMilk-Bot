@@ -88,8 +88,76 @@ class IdiomUtil(
     fun randomIdiom() = allIdioms.random()
         .run { first to second.last() }
 
+    /**
+     * 随机获取一个可以接的成语
+     */
+    fun randomIdiomHasNext(): Pair<String, String> {
+        for (i in 1..100) {
+            val (cy, py) = randomIdiom()
+            if (pinyinHasNext(py)) {
+                return cy to py
+            }
+        }
+        error("成语库异常，未获取到可以接的成语")
+    }
+
+    /**
+     * 随机获取下一个成语
+     */
     fun randomNext(pre: String) = dictionary[getLastWordPinyin(pre, false)]?.random()
 
+    /**
+     * 随机获取下一个成语，并且保证与原来的不同
+     */
+    fun randomNextExcept(pre: String): String? {
+        for (i in 1..100) {
+            val next = randomNext(pre) ?: return null
+            if (next != pre) {
+                return next
+            }
+        }
+        error("成语库异常，未获取到不相同的成语")
+    }
+
+    /**
+     * 随机获取下一个可以接的成语
+     */
+    fun randomNextHasNext(pre: String): String? {
+        for (i in 1..100) {
+            val next = randomNext(pre) ?: return null
+            if (hasNext(next)) {
+                return next
+            }
+        }
+        error("成语库异常，未获取到可以接的成语")
+    }
+
+    /**
+     * 随机获取下一个可以接的成语，并且保证与原来的不同
+     */
+    fun randomNextHasNextAndExcept(pre: String): String? {
+        for (i in 1..100) {
+            val next = randomNext(pre) ?: return null
+            if (hasNext(next) && next != pre) {
+                return next
+            }
+        }
+        error("成语库异常，未获取不相同的且可以接的成语")
+    }
+
+    /**
+     * 判断当前成语是否可以接
+     */
+    fun hasNext(pre: String) = getLastWordPinyin(pre, false) in dictionary
+
+    /**
+     * 判断当前是否存在这个拼音开头的成语（声调可以不同的）
+     */
+    fun pinyinHasNext(lastPinyin: String) = lastPinyin.removeShengdiao() in dictionary
+
+    /**
+     * 判断一个词是否为成语
+     */
     fun isValidIdiom(idiom: String) = idiom in allIdiomsMap
 }
 
