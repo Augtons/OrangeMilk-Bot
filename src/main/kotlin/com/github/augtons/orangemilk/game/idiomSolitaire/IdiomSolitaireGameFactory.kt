@@ -15,10 +15,9 @@ class IdiomSolitaireGameFactory(
     override fun getGame(
         eventChannel: EventChannel<GroupMessageEvent>,
         context: MessageEvent,
-        onFinish: (() -> Unit)?
     ): IdiomSolitaireGame? {
         return idiomUtil.enabled.then {
-            IdiomSolitaireGame(eventChannel, (context as GroupMessageEvent), idiomUtil, onFinish)
+            IdiomSolitaireGame(eventChannel, (context as GroupMessageEvent), idiomUtil)
         }
     }
 

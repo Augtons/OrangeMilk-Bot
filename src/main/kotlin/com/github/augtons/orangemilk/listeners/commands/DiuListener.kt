@@ -2,13 +2,15 @@ package com.github.augtons.orangemilk.listeners.commands
 
 import com.github.augtons.orangemilk.command.mc.McCmd
 import com.github.augtons.orangemilk.command.mc.McCommand
-import com.github.augtons.orangemilk.command.mc.mcCommand
+import com.github.augtons.orangemilk.command.mc.mcCommand4
+import com.github.augtons.orangemilk.command.mc.mcCommandAllEvent
 import com.github.augtons.orangemilk.command.registerCommand
 import com.github.augtons.orangemilk.media.DiuProvider
 import com.github.augtons.orangemilk.runtime.BotCommandSwitch
-import com.github.augtons.orangemilk.utils.orNull
-import kotlinx.coroutines.*
-import net.mamoe.mirai.event.events.GroupMessageEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withTimeout
+import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.utils.ExternalResource.Companion.toExternalResource
@@ -29,7 +31,7 @@ class DiuListener(
     }
 
     @McCmd
-    val diu = mcCommand<GroupMessageEvent> {
+    val diu = mcCommand4<GroupMessageEvent, FriendMessageEvent, GroupTempMessageEvent, StrangerMessageEvent> {
         name = "diu"
         prefix = listOf("/diu", "/丢")
 
@@ -40,7 +42,51 @@ class DiuListener(
         }
     }
 
-    suspend fun McCommand<GroupMessageEvent>.executeDiu() {
+    @McCmd
+    val pai = mcCommandAllEvent {
+        name = "pai"
+        prefix = listOf("/pai", "/拍")
+        needArgs()
+
+        onCall {
+            executeDiu(DiuProvider.Mode.PAI)
+        }
+    }
+
+    @McCmd
+    val grab = mcCommandAllEvent {
+        name = "grab"
+        prefix = listOf("/zhua", "/grab", "/抓")
+        needArgs()
+
+        onCall {
+            executeDiu(DiuProvider.Mode.GRAB)
+        }
+    }
+
+    @McCmd
+    val bao = mcCommandAllEvent {
+        name = "bao"
+        prefix = listOf("/bao", "/huge", "/抱")
+        needArgs()
+
+        onCall {
+            executeDiu(DiuProvider.Mode.BAO)
+        }
+    }
+
+    @McCmd
+    val pound = mcCommandAllEvent {
+        name = "pound"
+        prefix = listOf("/chui", "/pound", "/锤")
+        needArgs()
+
+        onCall {
+            executeDiu(DiuProvider.Mode.POUND)
+        }
+    }
+
+    suspend fun McCommand<MessageEvent>.executeDiu(mode: DiuProvider.Mode = DiuProvider.Mode.DIU) {
         argtable.forEach {
             val qq = when (it) {
                 is At -> it.target.toString()
@@ -52,7 +98,7 @@ class DiuListener(
                 if(qq.isBlank()){
                     throw Exception("QQ号不能为空")
                 }
-                val imgFile = withTimeout(8000) { diuProvider.diu(qq) }
+                val imgFile = withTimeout(8000) { diuProvider.diu(qq, mode) }
 
                 val imgResource = imgFile?.toExternalResource()
 
@@ -61,59 +107,13 @@ class DiuListener(
                         val imageRes = uploadImage(imgResource)
                         sendMessage(imageRes)
                     } else {
-                        sendMessage(PlainText("\"${qq}\"无法被丢"))
+                        sendMessage(PlainText("\"${qq}\"无法被${mode.label}"))
                     }
                 }
                 imgResource?.close()
                 imgFile?.delete()
             }catch (_: Exception) {
 //                    context!!.subject.sendMessage(PlainText("获取失败"))
-            }
-        }
-    }
-
-    @Deprecated(
-        message = "通过异步下载来实现丢，但是经过测试发现接口传回的图片异常。或许是因为其他无法抵抗并发",
-        replaceWith = ReplaceWith("executeDiu()")
-    )
-    suspend fun McCommand<GroupMessageEvent>.executeDiuAsync() {
-        // 解析出qq号，存入列表
-        val qqs = buildList {
-            argtable.forEach {
-                when (it) {
-                    is At -> add(it.target.toString())
-                    is PlainText -> add(it.content)
-                }
-            }
-        }
-        // 异步下载全部所需图片
-        val diuResources = qqs.associateWith {
-            coroutineScope.async {
-                withTimeoutOrNull(8000) {
-                    diuProvider.diu(it)?.let { file ->
-                        file to file.toExternalResource()
-                    }
-                }
-            }
-        }
-        // 发送
-        // fileAndRes 是一个diu图片的文件及其ExternalResource对象
-        diuResources.forEach { (qq, fileAndRes) ->
-            try {
-                val (file, res) = fileAndRes.await().orNull()
-
-                with(context!!.subject) {
-                    if (res != null) {
-                        val imageRes = uploadImage(res)
-                        sendMessage(imageRes)
-                    } else {
-                        sendMessage(PlainText("\"${qq}\"无法被丢"))
-                    }
-                }
-                res?.close()
-                file?.delete()
-            }catch (_: Exception) {
-
             }
         }
     }

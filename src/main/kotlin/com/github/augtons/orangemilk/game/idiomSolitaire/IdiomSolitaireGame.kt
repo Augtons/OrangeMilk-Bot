@@ -19,8 +19,7 @@ class IdiomSolitaireGame(
     private val eventChannel: EventChannel<GroupMessageEvent>,
     private val context: GroupMessageEvent,
     private val idiomUtil: IdiomUtil,
-    onFinish: (() -> Unit)? = null
-) : AbstractGroupGame(onFinish) {
+) : AbstractGroupGame() {
 
     private val logger = logger<IdiomSolitaireGame>()
 

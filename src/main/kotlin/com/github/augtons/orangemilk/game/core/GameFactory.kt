@@ -8,6 +8,5 @@ abstract class GameFactory<E: MessageEvent> {
     abstract fun getGame(
         eventChannel: EventChannel<E>,
         context: MessageEvent,
-        onFinish: (() -> Unit)? = null
     ): AbstractGame?
 }

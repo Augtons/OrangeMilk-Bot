@@ -1,8 +1,6 @@
 package com.github.augtons.orangemilk.game.core
 
-abstract class AbstractGroupGame(
-    onFinish: (() -> Unit)? = null
-): AbstractGame(onFinish) {
+abstract class AbstractGroupGame: AbstractGame() {
 
     abstract val players: MutableSet<Long>
     abstract val scores: MutableMap<Long, Double>

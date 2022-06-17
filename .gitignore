@@ -10,6 +10,7 @@ application.yml
 ### Runtime Cache ###
 app_cache/
 cache/
+helps/
 device.json
 
 ### STS ###
