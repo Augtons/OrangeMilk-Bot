@@ -66,11 +66,15 @@ class DiuListener(
 
     @McCmd
     val bao = mcCommandAllEvent {
-        name = "bao"
-        prefix = listOf("/bao", "/huge", "/抱")
-        needArgs()
+        name = "bao"   //指令名
+        prefix = listOf("/bao", "/huge", "/抱")  // 触发语句
+        needArgs()  // 是否接收参数（会传到onCall代码段里）
 
-        onCall {
+//        示例：过滤器这么写
+//        filter { it.sender.id == 123456789L }   // 过滤发送者
+//        filter { it is GroupMessageEvent && it.group.id == 3452367L } // 过滤群消息的群号
+
+        onCall {    //触发动作
             executeDiu(DiuProvider.Mode.BAO)
         }
     }
