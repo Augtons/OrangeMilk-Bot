@@ -17,6 +17,7 @@ class IdiomSolitaireGameFactory(
         context: MessageEvent,
     ): IdiomSolitaireGame? {
         return idiomUtil.enabled.then {
+            // IdiomSolitaire is a group game. So cast context to GroupMessageEvent anyway!
             IdiomSolitaireGame(eventChannel, (context as GroupMessageEvent), idiomUtil)
         }
     }

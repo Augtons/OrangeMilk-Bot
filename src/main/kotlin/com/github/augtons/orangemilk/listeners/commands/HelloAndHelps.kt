@@ -1,16 +1,12 @@
 package com.github.augtons.orangemilk.listeners.commands
 
 import com.github.augtons.orangemilk.command.mc.McCmd
-import com.github.augtons.orangemilk.command.mc.mcCommand4
+import com.github.augtons.orangemilk.command.mc.mcCommandAllEvent
 import com.github.augtons.orangemilk.command.registerCommand
 import com.github.augtons.orangemilk.configurations.properties.BotAppProperties
 import com.github.augtons.orangemilk.runtime.BotCommandSwitch
 import com.github.augtons.orangemilk.utils.logger
 import net.mamoe.mirai.contact.Group
-import net.mamoe.mirai.event.events.FriendMessageEvent
-import net.mamoe.mirai.event.events.GroupMessageEvent
-import net.mamoe.mirai.event.events.GroupTempMessageEvent
-import net.mamoe.mirai.event.events.StrangerMessageEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.PlainText
@@ -62,7 +58,7 @@ class HelloAndHelps(
     )
 
     @McCmd
-    val help = mcCommand4<GroupMessageEvent, FriendMessageEvent, GroupTempMessageEvent, StrangerMessageEvent> {
+    val help = mcCommandAllEvent {
         name = "help"
         prefix = listOf("/help", "/list")
 
@@ -72,7 +68,7 @@ class HelloAndHelps(
     }
 
     @McCmd
-    val hello = mcCommand4<GroupMessageEvent, FriendMessageEvent, GroupTempMessageEvent, StrangerMessageEvent> {
+    val hello = mcCommandAllEvent {
         name = "hello"
         prefix = listOf("/hello", "/hi")
 

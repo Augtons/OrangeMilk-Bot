@@ -39,6 +39,32 @@ fun parseMcCommand(messageChain: MessageChain): Pair<List<String>, List<SingleMe
 }
 
 /**
+ * 内联指令调用，并通过event中的消息解析参数
+ */
+suspend operator fun <E: MessageEvent> McCommand<E>.invoke(event: E) {
+    val cmd = this.copy()
+    val (_, args) = parseMcCommand(event.message)
+
+    cmd.onCall(cmd.apply {
+        context = event
+        argtable = args
+    })
+}
+
+/**
+ * 内联指令调用，通过自定义MessageChain解析消息参数
+ */
+suspend operator fun <E: MessageEvent> McCommand<E>.invoke(event: E, message: MessageChain) {
+    val cmd = this.copy()
+    val (_, args) = parseMcCommand(message)
+
+    cmd.onCall(cmd.apply {
+        context = event
+        argtable = args
+    })
+}
+
+/**
  * MC风格指令类
  *
  * @see mcCommand

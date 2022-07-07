@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.augtons"
-version = "1.2.2-Release"
+version = "1.2.3-Release"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {

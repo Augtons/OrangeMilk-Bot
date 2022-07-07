@@ -41,7 +41,7 @@ class IdiomSolitaireGame(
 
     private val recentIdioms: LinkedList<String> = LinkedList()
 
-    private var maxRound = 30   // 最大回合数，默认30
+    private var maxRound = 50   // 最大回合数，默认50
     private var round = 1       // 当前回合数
 
     private val maxTime = 120  // 回合最大时间
@@ -50,7 +50,17 @@ class IdiomSolitaireGame(
 
     private val timer = Timer(maxTime) { finish() }.apply {
         timeWachers[30] = { context.subject.sendMessage("还剩30秒了") }
-        timeWachers[60] = { context.subject.sendMessage("还剩一分钟了") }
+        timeWachers[60] = {
+            context.subject.sendMessage("还剩一分钟了")
+            context.subject.sendMessage(
+                """
+                |输入『排名』查看实时排名
+                |可以输入『提示』/『跳过』哦
+                |
+                |我们正在接：${lastIdiom}($lastPinyin)
+                """.trimMargin()
+            )
+        }
     }
 
     infix fun String.next(newer: String) = idiomUtil.isValidNext(this, newer)
@@ -74,8 +84,8 @@ class IdiomSolitaireGame(
         lastPinyin = lastpy
 
         runBlocking {
-            delay(500)
-            context.subject.sendMessage("共${maxRound}回合(默认30)")
+            delay(400)
+            context.subject.sendMessage("共${maxRound}回合(默认50)")
             context.subject.sendMessage("第一个成语: $lastIdiom($lastPinyin)")
         }
 
@@ -102,24 +112,25 @@ class IdiomSolitaireGame(
 
                     timer.time = maxTime
 
-                    if(round < maxRound) {
+                    if(round <= maxRound) {
                         subject.sendMessage(
                             PlainText("恭喜") + At(sender) + "回答正确\n" +
                             """
                             |当前分数为${scores[sender.id]} (+1.0)
                             |
-                            |新成语(第${round}回合)：${lastIdiom}($lastPinyin)
+                            |第${round}/${maxRound}回合
+                            |新成语：${lastIdiom}($lastPinyin)
                             """.trimMargin()
                         )
-                    } else if(round == maxRound){
-                        subject.sendMessage(
-                            PlainText("恭喜") + At(sender) + "回答正确\n" +
-                            """
-                            |当前分数为${scores[sender.id]} (+1.0)
-                            |
-                            |新成语(最后一回合)：${lastIdiom}($lastPinyin)
-                            """.trimMargin()
-                        )
+//                    } else if(round == maxRound){
+//                        subject.sendMessage(
+//                            PlainText("恭喜") + At(sender) + "回答正确\n" +
+//                            """
+//                            |当前分数为${scores[sender.id]} (+1.0)
+//                            |
+//                            |新成语(最后一回合)：${lastIdiom}($lastPinyin)
+//                            """.trimMargin()
+//                        )
                     } else {
                         subject.sendMessage(
                             PlainText("恭喜") + At(sender) + "回答正确\n" +
@@ -163,8 +174,8 @@ class IdiomSolitaireGame(
 
             when(msg) {
                 "退出", "结束", "结束游戏", "退出游戏" -> {
-                    if (timer.time > 40) {
-                        subject.sendMessage("距离上次有人回答还很近哦。先等等吧，等会再结束")
+                    if (timer.time > 45) {
+                        subject.sendMessage("距离上次有人回答还很近哦。再等${timer.time - 45}秒如果没人回答再结束吧")
                     } else {
                         finish()
                     }
