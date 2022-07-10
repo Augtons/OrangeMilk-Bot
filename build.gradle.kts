@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.augtons"
-version = "1.2.3-Release"
+version = "1.2.4-Release"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -24,8 +24,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    implementation("net.mamoe", "mirai-core", "2.10.3")
-    implementation("net.mamoe", "mirai-logging-slf4j", "2.10.3")
+    implementation("net.mamoe", "mirai-core", "2.12.0")
+    implementation("net.mamoe", "mirai-logging-slf4j", "2.12.0")
 
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("com.google.code.gson:gson:2.9.0")

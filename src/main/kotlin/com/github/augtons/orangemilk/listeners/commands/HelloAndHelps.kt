@@ -4,6 +4,7 @@ import com.github.augtons.orangemilk.command.mc.McCmd
 import com.github.augtons.orangemilk.command.mc.mcCommandAllEvent
 import com.github.augtons.orangemilk.command.registerCommand
 import com.github.augtons.orangemilk.configurations.properties.BotAppProperties
+import com.github.augtons.orangemilk.listeners.faces
 import com.github.augtons.orangemilk.runtime.BotCommandSwitch
 import com.github.augtons.orangemilk.utils.logger
 import net.mamoe.mirai.contact.Group
@@ -46,16 +47,6 @@ class HelloAndHelps(
         }
     }
 
-
-    val faces = listOf(
-        Face.斜眼笑,
-        Face.汪汪,
-        Face.doge,
-        Face.捂脸,
-        Face.期待,
-        Face.吃糖,
-        Face.崇拜
-    )
 
     @McCmd
     val help = mcCommandAllEvent {

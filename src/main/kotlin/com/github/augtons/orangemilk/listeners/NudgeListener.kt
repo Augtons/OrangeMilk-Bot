@@ -1,11 +1,8 @@
 package com.github.augtons.orangemilk.listeners
 
 import com.github.augtons.orangemilk.configurations.properties.BotProperties
-import com.github.augtons.orangemilk.media.music.KugouMusicSearcher
 import com.github.augtons.orangemilk.utils.TimeLimitedTask
 import com.github.augtons.orangemilk.utils.nowMillis
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.selects.whileSelect
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -45,15 +42,6 @@ class NudgeListener(
                 (it.from.id != lastNudger || (nowMillis() - lastTime >= 200))
             }
 
-        val faces = listOf(
-            Face.斜眼笑,
-            Face.汪汪,
-            Face.doge,
-            Face.捂脸,
-            Face.期待,
-            Face.吃糖,
-            Face.崇拜
-        )
 
         nudgeChannel.subscribeAlways<NudgeEvent> {
             when(subject) {
