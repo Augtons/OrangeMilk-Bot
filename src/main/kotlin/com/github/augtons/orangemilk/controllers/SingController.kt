@@ -1,6 +1,6 @@
 package com.github.augtons.orangemilk.controllers
 
-import com.github.augtons.orangemilk.media.sing.SingProvider
+import com.github.augtons.orangemilk.media.SingProvider
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody

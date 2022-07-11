@@ -1,7 +1,7 @@
 package com.github.augtons.orangemilk.controllers
 
-import com.github.augtons.orangemilk.listeners.commands.GameListener
-import com.github.augtons.orangemilk.listeners.commands.HelloAndHelps
+import com.github.augtons.orangemilk.user.commands.GameListener
+import com.github.augtons.orangemilk.user.commands.HelloAndHelps
 import com.github.augtons.orangemilk.utils.logger
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

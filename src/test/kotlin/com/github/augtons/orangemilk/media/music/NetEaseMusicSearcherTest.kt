@@ -1,18 +1,12 @@
 package com.github.augtons.orangemilk.media.music
 
-import com.github.augtons.orangemilk.configurations.properties.MusicProperties
+import com.github.augtons.orangemilk.properties.MusicProperties
 import com.github.augtons.orangemilk.utils.buildUri
-import com.github.augtons.orangemilk.utils.httpGetString
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import kotlinx.coroutines.runBlocking
-import net.mamoe.mirai.Bot
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.web.util.UriComponentsBuilder
-import java.net.URI
 
 @SpringBootTest
 internal class NetEaseMusicSearcherTest {

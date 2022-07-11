@@ -1,6 +1,6 @@
 package com.github.augtons.orangemilk.media.music
 
-import com.github.augtons.orangemilk.configurations.properties.MusicProperties
+import com.github.augtons.orangemilk.properties.MusicProperties
 import com.github.augtons.orangemilk.utils.buildUri
 import com.github.augtons.orangemilk.utils.httpGetString
 import com.github.augtons.orangemilk.utils.logger

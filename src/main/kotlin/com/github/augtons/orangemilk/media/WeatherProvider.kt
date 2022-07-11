@@ -44,6 +44,9 @@ class WeatherProvider {
             val tomorrowNightTemp = temp15Night[2].temperature.replace("°", "℃")
 
             with(weather) {
+//                |----------
+//                |降水预报：
+//                |  降水概率: $precipitation%, $precipitation_type
                 return (
                         if (countryCode == null || countryCode == 4982) { // 中国
                             """
@@ -56,9 +59,6 @@ class WeatherProvider {
                         |当前空气状况：
                         |  空气湿度：$humidity%, 能见度：$visibility m, 气压: ${pressure} hPa
                         |  污染状况：${pm25.level}, 'PM2.5': ${pm25.ps_pm25}
-                        |----------
-                        |降水预报：
-                        |  降水概率: $precipitation%, $precipitation_type
                         |==========
                         |今天：(日出${feature.sunriseTime}; 日落${feature.sunsetTime})
                         |  白天: $weather_day, $temperature_day℃。$wind_direction_day$wind_power_day
@@ -78,9 +78,6 @@ class WeatherProvider {
                         |----------
                         |当前空气状况：
                         |  空气湿度：$humidity%
-                        |----------
-                        |降水预报：
-                        |  降水概率: $precipitation%, $precipitation_type
                         |==========
                         |今天：(日出${feature.sunriseTime}; 日落${feature.sunsetTime})
                         |  白天: $weather_day, $temperature_day℃。$wind_direction_day$wind_power_day

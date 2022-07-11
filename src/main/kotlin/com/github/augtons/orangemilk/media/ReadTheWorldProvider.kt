@@ -1,6 +1,6 @@
 package com.github.augtons.orangemilk.media
 
-import com.github.augtons.orangemilk.configurations.properties.BotAppProperties
+import com.github.augtons.orangemilk.properties.BotAppProperties
 import com.github.augtons.orangemilk.utils.httpDownloadFileSuspend
 import com.github.augtons.orangemilk.utils.httpGetString
 import com.google.gson.Gson

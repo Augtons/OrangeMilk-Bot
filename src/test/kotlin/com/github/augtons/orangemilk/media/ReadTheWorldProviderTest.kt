@@ -1,10 +1,8 @@
 package com.github.augtons.orangemilk.media
 
-import com.github.augtons.orangemilk.configurations.properties.BotAppProperties
+import com.github.augtons.orangemilk.properties.BotAppProperties
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
