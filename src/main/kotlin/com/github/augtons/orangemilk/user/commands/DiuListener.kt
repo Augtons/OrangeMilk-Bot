@@ -27,17 +27,17 @@ class DiuListener(
 
     @PostConstruct
     fun init() {
-        registerCommand(this, commandManager)
-    }
+            registerCommand(this, commandManager)
+        }
 
-    @McCmd
-    val diu = mcCommandAllEvent {
-        name = "diu"
-        prefix = listOf("/diu", "/丢")
+        @McCmd
+        val diu = mcCommandAllEvent {
+            name = "diu"
+            prefix = listOf("/diu", "/丢")
 
-        needArgs()
+            needArgs()
 
-        onCall {
+            onCall {
             executeDiu()
         }
     }

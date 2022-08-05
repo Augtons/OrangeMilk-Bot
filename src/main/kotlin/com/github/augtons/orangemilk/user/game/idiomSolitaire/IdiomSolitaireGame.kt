@@ -1,6 +1,7 @@
 package com.github.augtons.orangemilk.user.game.idiomSolitaire
 
 import com.github.augtons.orangemilk.framework.game.AbstractGroupGame
+import com.github.augtons.orangemilk.user.game.Timer
 import com.github.augtons.orangemilk.utils.logger
 import com.github.augtons.orangemilk.utils.nowMillis
 import kotlinx.coroutines.*
@@ -122,15 +123,6 @@ class IdiomSolitaireGame(
                             |新成语：${lastIdiom}($lastPinyin)
                             """.trimMargin()
                         )
-//                    } else if(round == maxRound){
-//                        subject.sendMessage(
-//                            PlainText("恭喜") + At(sender) + "回答正确\n" +
-//                            """
-//                            |当前分数为${scores[sender.id]} (+1.0)
-//                            |
-//                            |新成语(最后一回合)：${lastIdiom}($lastPinyin)
-//                            """.trimMargin()
-//                        )
                     } else {
                         subject.sendMessage(
                             PlainText("恭喜") + At(sender) + "回答正确\n" +
@@ -247,29 +239,6 @@ class IdiomSolitaireGame(
         } else false
     }
 
-    class Timer(
-        @set:Synchronized var time: Int = 120,
-        val onAlarm: () -> Unit
-    ) {
-        // 不要在定时器运行时改变这个map
-        // 如果想改也行，封装新函数将对此map的增删异步化，但是我现在觉得还没必要做
-        val timeWachers = mutableMapOf<Int, suspend () -> Unit>()
-
-        val coroutineScope = CoroutineScope(Dispatchers.IO)
-        var runningJob: Job? = null
-
-        fun start() {
-            runningJob?.cancel()
-            runningJob = coroutineScope.launch {
-                do {
-                    timeWachers[time]?.invoke()
-                    delay(1000)
-                } while (time-- > 0)
-                onAlarm()
-                coroutineScope.cancel()
-            }
-        }
-    }
 
     private fun getRank(): String? {
         return if(scores.isNotEmpty()) {

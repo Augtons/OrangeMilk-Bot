@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.augtons"
-version = "1.2.5-Release"
+version = "1.3.0-Release"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -30,6 +30,13 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("com.google.code.gson:gson:2.9.0")
     implementation("org.ini4j:ini4j:0.5.4")
+
+    implementation("org.xerial:sqlite-jdbc:3.36.0.3")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-community-dialects
+    //implementation("org.hibernate.orm:hibernate-community-dialects:6.0.2.Final")
+    implementation("com.github.gwenn:sqlite-dialect:0.1.2")
 }
 
 tasks.withType<KotlinCompile> {
