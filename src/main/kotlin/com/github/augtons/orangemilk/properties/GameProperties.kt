@@ -8,9 +8,14 @@ import org.springframework.stereotype.Component
 class GameProperties {
 
     var idiom = IdiomRepository()
+    var feiHuaLing = FeiHuaLing()
 
     data class IdiomRepository(
         var repo: String = "",
         var repoCharset: String = "GBK"
+    )
+
+    data class FeiHuaLing(
+        var enable: Boolean = false
     )
 }
