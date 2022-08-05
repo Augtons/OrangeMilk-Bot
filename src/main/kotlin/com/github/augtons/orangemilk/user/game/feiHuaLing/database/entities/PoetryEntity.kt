@@ -3,7 +3,7 @@ package com.github.augtons.orangemilk.user.game.feiHuaLing.database.entities
 import javax.persistence.*
 
 @Entity
-@Table(name = "poetry")
+@Table(name = "fhl_poetry")
 class PoetryEntity @JvmOverloads constructor (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

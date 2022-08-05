@@ -55,10 +55,17 @@ class FeiHuaLingGame(
         timer.start()
 
         listeners += eventChannel.subscribeAlways {
-            val msg = message.filterIsInstance<PlainText>().joinToString("") { it.content.trim() }
+            val msg = message.filterIsInstance<PlainText>()
+                .joinToString("") { it.content.trim() }
+                .run {
+                    // 移除空白字符, a-z, 0-9和一些其他的符号
+                    replace(Regex("""[a-zA-Z0-9\s!;<>,+-=]"""), "")
+                }
+
             if (msg.isBlank()) {
                 return@subscribeAlways
             }
+
             if (msg in usedSentence) {
                 subject.sendMessage(
                     At(sender) + "\n" + """
@@ -127,7 +134,7 @@ class FeiHuaLingGame(
         }
     }
 
-    fun getRank(): String? {
+    private fun getRank(): String? {
         return if(scores.isNotEmpty()) {
             scores.toList().sortedByDescending { it.second }.mapIndexed { index, (qq, score) ->
                 "【${index + 1}】${playNames[qq]}\n    得分: $score"

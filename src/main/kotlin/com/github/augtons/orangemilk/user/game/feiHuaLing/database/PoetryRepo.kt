@@ -8,6 +8,6 @@ interface PoetryRepo: JpaRepository<PoetryEntity, Int> {
 
     fun findBySubSentence(sentence: String): MutableList<PoetryEntity>
 
-    @Query("select w.word from word w;", nativeQuery = true)
+    @Query("select w.word from fhl_words w;", nativeQuery = true)
     fun getWords(): MutableList<String>
 }

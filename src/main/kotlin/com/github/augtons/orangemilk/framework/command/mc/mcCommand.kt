@@ -22,7 +22,7 @@ fun parseMcCommand(messageChain: MessageChain): Pair<List<String>, List<SingleMe
             when(it) {
                 is PlainText -> {
                     // 空格、点、句号、全角空格、中文逗号、英文逗号
-                    addAll(it.content.split("\n", " ", ".", "。", "　", "，", ",").map { PlainText(it) })
+                    addAll(it.content.split("\n", " ", ".", "。", "　", "，", ",", ";").map { PlainText(it) })
                 }
                 else -> add(it)
             }
