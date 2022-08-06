@@ -75,9 +75,9 @@ class IdiomSolitaireGame(
                 addAll(it.content.trim().split("\n", " ", ".", "。", "　", "，", ","))
             }
         }.mapNotNull { it.toIntOrNull() }
-        // 设置时间，最小1最大200，默认30
+        // 设置时间，最小1最大200，默认50
         intArgs.lastOrNull()?.let {
-            maxRound = if(it <= 0) 30 else min(200, it)
+            maxRound = if(it <= 0) 50 else min(200, it)
         }
         // 初始化第一个成语
         val (idiom, lastpy) = idiomUtil.randomIdiomHasNext()
