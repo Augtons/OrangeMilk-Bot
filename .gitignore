@@ -43,3 +43,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Database ###
+*.db
