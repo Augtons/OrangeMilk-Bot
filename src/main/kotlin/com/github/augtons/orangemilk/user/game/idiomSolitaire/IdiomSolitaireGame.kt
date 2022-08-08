@@ -4,7 +4,9 @@ import com.github.augtons.orangemilk.framework.game.AbstractGroupGame
 import com.github.augtons.orangemilk.user.game.Timer
 import com.github.augtons.orangemilk.utils.logger
 import com.github.augtons.orangemilk.utils.nowMillis
-import kotlinx.coroutines.*
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.event.EventChannel
 import net.mamoe.mirai.event.Listener
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -13,7 +15,8 @@ import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.Face
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.buildMessageChain
-import java.util.LinkedList
+import java.util.*
+import kotlin.math.ceil
 import kotlin.math.min
 
 class IdiomSolitaireGame(
@@ -39,6 +42,12 @@ class IdiomSolitaireGame(
 
     private var lastIdiom: String = ""
     private var lastPinyin: String = ""
+
+    // 游戏开始时间，用于计算游戏时长
+    private val startTimeStamp: Long = nowMillis()
+    // 游戏时长
+    private val runningTime get() =
+        ceil(((nowMillis() - startTimeStamp).toFloat()) / 60_000).toLong()
 
     private val recentIdioms: LinkedList<String> = LinkedList()
 
@@ -214,6 +223,7 @@ class IdiomSolitaireGame(
                         |当前为第${round}回合
                         |${getRank() ?: "暂无排行榜"}
                         |
+                        |游戏已进行：${runningTime}分钟
                         |我们正在接：${lastIdiom}($lastPinyin)
                         """.trimMargin()
                     )
@@ -256,9 +266,9 @@ class IdiomSolitaireGame(
 
         runBlocking {
             val rank = if (scores.isEmpty()) {
-                "输入“/game 成语接龙”重新开始"
+                "本次游戏时长：${runningTime}分钟\n输入“/game 成语接龙”重新开始"
             } else {
-                "排行: \n${getRank()}\n输入“/game 成语接龙”重新开始"
+                "排行: \n${getRank()}\n\n本次游戏时长：${runningTime}分钟\n输入“/game 成语接龙”重新开始"
             }
 
             context.subject.sendMessage(

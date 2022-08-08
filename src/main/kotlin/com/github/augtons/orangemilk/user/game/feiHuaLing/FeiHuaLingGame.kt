@@ -3,6 +3,7 @@ package com.github.augtons.orangemilk.user.game.feiHuaLing
 import com.github.augtons.orangemilk.framework.game.AbstractGroupGame
 import com.github.augtons.orangemilk.user.game.Timer
 import com.github.augtons.orangemilk.utils.logger
+import com.github.augtons.orangemilk.utils.nowMillis
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.runBlocking
 import net.mamoe.mirai.event.EventChannel
@@ -12,6 +13,7 @@ import net.mamoe.mirai.event.events.MessageEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.buildMessageChain
+import kotlin.math.ceil
 
 class FeiHuaLingGame(
     private val eventChannel: EventChannel<GroupMessageEvent>,
@@ -27,8 +29,13 @@ class FeiHuaLingGame(
     override val scores: MutableMap<Long, Double> = mutableMapOf()
     private val playNames: MutableMap<Long, String> = mutableMapOf()
 
-    private val gamingWord = feiHuaLingUtil.words.random()
+    // 游戏开始时间，用于计算游戏时长
+    private val startTimeStamp: Long = nowMillis()
+    // 游戏时长
+    private val runningTime get() =
+        ceil(((nowMillis() - startTimeStamp).toFloat()) / 60_000).toLong()
 
+    private val gamingWord = feiHuaLingUtil.words.random()
     private val usedSentence = mutableSetOf<String>()
 
     private val maxTime = 120
@@ -90,6 +97,7 @@ class FeiHuaLingGame(
                     subject.sendMessage("""
                         |${getRank() ?: "暂无排行榜"}
                         |
+                        |游戏已进行：${runningTime}分钟
                         |请回答含有“${gamingWord}”的诗句
                         """.trimMargin()
                     )
@@ -116,7 +124,7 @@ class FeiHuaLingGame(
                             """
                             |当前分数为${scores[sender.id]} (+1.0)
                             |
-                            |此句出自中：《${poetry.book}》
+                            |此句出自：《${poetry.book}》
                             |　${poetry.sentence}
                             |　　——《${poetry.title}》(${poetry.author})
                             """.trimMargin()
@@ -150,9 +158,9 @@ class FeiHuaLingGame(
 
         runBlocking {
             val rank = if (scores.isEmpty()) {
-                "输入“/game 飞花令”重新开始"
+                "本次游戏时长：${runningTime}分钟\n输入“/game 飞花令”重新开始"
             } else {
-                "排行: \n${getRank()}\n输入“/game 飞花令”重新开始"
+                "排行: \n${getRank()}\n\n本次游戏时长：${runningTime}分钟\n输入“/game 飞花令”重新开始"
             }
 
             context.subject.sendMessage(
