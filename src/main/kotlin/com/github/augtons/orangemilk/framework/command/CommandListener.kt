@@ -55,7 +55,11 @@ class CommandListener(
 
                 commandToCall.forEach {
                     coroutineScope.launch {
-                        it.onCall(it)
+                        try {
+                            it.onCall(it)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -83,7 +87,11 @@ class CommandListener(
 
                 commandToCall.forEach {
                     coroutineScope.launch {
-                        it.onCall(it)
+                        try {
+                            it.onCall(it)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -111,7 +119,11 @@ class CommandListener(
 
                 commandToCall.forEach {
                     coroutineScope.launch {
-                        it.onCall(it)
+                        try {
+                            it.onCall(it)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
@@ -139,7 +151,11 @@ class CommandListener(
 
                 commandToCall.forEach {
                     coroutineScope.launch {
-                        it.onCall(it)
+                        try {
+                            it.onCall(it)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }
